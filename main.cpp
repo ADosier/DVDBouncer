@@ -5,21 +5,35 @@
 // ==============================================================
 
 
-//#include "Engine.h" // Library for the engine
-#include "SDL.h"
+#include "Engine.h" // Library for the engine
 
 int main(int argc, char *argv[])
 {
+	int FPS = 60; // limit framerate
+	int frameDelay = 1000 / FPS;
+	Uint32 frameStart;
+	int frameTime;
 
-	SDL_Init(SDL_INIT_EVERYTHING);
-	SDL_Window *window = SDL_CreateWindow("title", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 700, 500, SDL_WINDOW_SHOWN);
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+	Engine* engine = nullptr;
+	engine = new Engine(); // insert name of window/../../xdim/ydim
+	engine->init("Graphics Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 960, 960, false);
 
-	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-	SDL_RenderClear(renderer);
-	SDL_RenderPresent(renderer);
-	SDL_Delay(3000);
+	while (engine->running())
+	{
+		frameStart = SDL_GetTicks();
 
-	system("pause");
+		engine->handleEvents();
+		engine->update();
+		engine->render();
+
+		frameTime = SDL_GetTicks() - frameStart;
+		if (frameDelay > frameTime)
+		{
+			SDL_Delay(frameDelay - frameTime);
+		}
+	}
+	
+	engine->close();
+	
 	return 0;
 }
