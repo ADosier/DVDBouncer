@@ -3,41 +3,44 @@
 
 #include "Components.h"
 #include "SDL.h"
-#include <iostream>
 
 class SpriteComponent : public Component
 {
 public:
 	SpriteComponent() = default;
-	SpriteComponent(const char* path)
+	SpriteComponent(const char* path, int srcrectH = 32, int srcrectW = 32)
 	{
 		texture = TextureManager::LoadTexture(path);
-	}
-
-	void init() override
-	{
-		position = &entity->getComponent<PositionComponent>();
-
 		srcRect.x = srcRect.y = 0;
-		srcRect.w = srcRect.h = 32;
-		destRect.w = destRect.h = 32;
+		
+		srcRect.w = srcrectW;
+		srcRect.h = srcrectH;
 
+		destRect.w = srcrectW;
+		destRect.h = srcrectH;
+	}
+	~SpriteComponent()
+	{
+		SDL_DestroyTexture(texture);
+		std::cout << "texture destroyed" << std::endl;
+	}
+	void init() override // generic values for the initial creation
+	{
+		transform = &entity->getComponent<TransformComponent>();
 	}
 
 	void update() override
 	{
-		destRect.x = position->x();
-		destRect.y = position->y();
+		destRect.x = (int)transform->position.x;
+		destRect.y = (int)transform->position.y;
 	}
 
 	void draw() override
 	{
 		TextureManager::Draw(texture, srcRect, destRect);
-
-		std::cout << "draw "<< "("<< destRect.x << ","<<destRect.y <<")" << std::endl;
 	}
 private:
-	PositionComponent* position;
+	TransformComponent* transform;
 	SDL_Texture* texture;
 	SDL_Rect srcRect, destRect;
 };
