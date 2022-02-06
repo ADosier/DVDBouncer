@@ -23,6 +23,9 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Vector2D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -34,13 +37,19 @@
     <ClInclude Include="Components.h">
       <Filter>ECS</Filter>
     </ClInclude>
-    <ClInclude Include="PositionComponent.h">
-      <Filter>ECS</Filter>
-    </ClInclude>
     <ClInclude Include="SpriteComponent.h">
       <Filter>ECS</Filter>
     </ClInclude>
     <ClInclude Include="TextureManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsComponent.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

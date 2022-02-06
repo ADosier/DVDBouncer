@@ -4,9 +4,9 @@
 
 Manager manager;
 SDL_Renderer* Engine::renderer = nullptr;
-
-// ball entity
-auto& ball(manager.addEntity());
+// entities
+auto& card(manager.addEntity());
+int counter = 0;
 
 Engine::Engine()
 {
@@ -64,15 +64,20 @@ void Engine::init(const char* title, int xpos, int ypos, int width, int height, 
 
 void Engine::initObjects()
 {
-	ball.addComponent<PositionComponent>(450,450);
-	ball.addComponent<SpriteComponent>("assets/ball.png");
+	// This is where the game objects will be assembled one component at a time
+
+
+	card.addComponent<TransformComponent>(400,400);
+	card.addComponent<SpriteComponent>("assets/GPS2.png", 500, 500);
+	card.addComponent<PhysicsComponent>(5, -6, 0);
+
 }
 
 void Engine::handleEvents()
 {
 	// function improvement
 		// This function can be improved later by adding
-		// a state system to poll for different events
+		// a state system to poll for different events that happen one after another
 	// function details
 		// it simply runs a switch statement on an SDL_Event to trigger updates
 
@@ -91,7 +96,16 @@ void Engine::handleEvents()
 
 void Engine::update()
 {
-	manager.update(); // this will update all components on every entity
+	// I just put in a load delay because it looks clunky
+	if (counter == 0)
+	{
+		manager.update();
+		counter++;
+	}
+	if (counter < 50)
+		counter++;
+	else
+		manager.update(); // this will update all components on every entity
 }
 
 void Engine::render()
@@ -103,7 +117,7 @@ void Engine::render()
 		// and lastly present the canvas to the user
 
 	SDL_RenderClear(renderer); // clear out render buffer
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(renderer, 161, 161, 161, 255);
 	manager.draw();
 	SDL_RenderPresent(renderer);
 }
@@ -114,9 +128,10 @@ void Engine::close()
 		// essential SDL items are destroyed here and SDL itself is quit
 		// after that each thing that is dynamic memory needs to be dealt with
 
-
-	SDL_DestroyWindow(window);
+	// Remove components from ECS manager
+	
 	SDL_DestroyRenderer(renderer);
+	SDL_DestroyWindow(window);
 	SDL_Quit();
 
 	std::cout << "Cleared memory." << std::endl;
