@@ -4,6 +4,8 @@
 #include "Components.h"
 #include "SDL.h"
 
+#include "Rando.h" //========================================================= DVD BOUNCE DEMO ONLY
+
 class SpriteComponent : public Component
 {
 public:
@@ -18,15 +20,21 @@ public:
 
 		destRect.w = srcrectW;
 		destRect.h = srcrectH;
+
+		/*
+		You can do the following where you initalize the srcRect width and height = the transform positions
+
+		*/
 	}
 	~SpriteComponent()
 	{
 		SDL_DestroyTexture(texture);
-		std::cout << "texture destroyed" << std::endl;
+		//std::cout << "texture destroyed" << std::endl;
 	}
 	void init() override // generic values for the initial creation
 	{
 		transform = &entity->getComponent<TransformComponent>();
+		
 	}
 
 	void update() override
@@ -39,9 +47,24 @@ public:
 	{
 		TextureManager::Draw(texture, srcRect, destRect);
 	}
+
+	void setRandomColor()
+	{
+		int r = rand.getRand(0, 255);
+		int g = rand.getRand(0, 255);
+		int b = rand.getRand(0, 255);
+		SDL_SetTextureColorMod(texture, r, g, b);
+	}
+
+	SDL_Rect getSrcDim()
+	{
+		return destRect; // returns a copy of the rect to relay dimension data
+	};
 private:
 	TransformComponent* transform;
 	SDL_Texture* texture;
 	SDL_Rect srcRect, destRect;
+
+	Rando rand;
 };
 #endif
