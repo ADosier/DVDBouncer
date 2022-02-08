@@ -9,16 +9,21 @@
 class Engine
 {
 public:
-	Engine();
-	~Engine();
-	void init(const char* title, int xpos, int ypos, int width, int height, bool fullscr);
-	void handleEvents();	//
-	void update();			// Lifeline of the program loop
-	void render();			//
-	void close();
-	bool running();
+			Engine		();
+			~Engine		();
+	void	init		(const char* title, int xpos, int ypos, int width, int height, bool fullscr);
+	void	handleEvents();	//
+	void	update		();	// Lifeline of the program loop
+	void	render		();	//
+	void	close		();
+	bool	running		();
 
-	static SDL_Renderer* renderer;
+	static SDL_Renderer*	renderer;
+	static SDL_Event		event;
+
+	static const int	windowW = 960;
+	static const int	windowH = 960;
+	static const bool	fullscr = false;
 
 private:
 	void initObjects();

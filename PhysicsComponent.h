@@ -7,10 +7,16 @@ class PhysicsComponent : public Component
 {
 private:
 	TransformComponent* transform;
+	SpriteComponent* sprite;
+	
 	// velocity
-	float xvel;
-	float yvel;
-	float gravity;
+	float		xvel;
+	float		yvel;
+
+	// imageRect is dimensions of the sprite that will bounce around
+	SDL_Rect	imageRect;
+	int			windowH = Engine::windowH;
+	int			windowW = Engine::windowW;
 
 public:
 	PhysicsComponent(float Xvel = 0.0, float Yvel = 0.0, float g = 0.0)
@@ -18,30 +24,33 @@ public:
 		// initalize startig velocities and the gravity of the object
 		xvel = Xvel;
 		yvel = Yvel;
-		gravity = g;
 	}
 	void init() override // generic values for the initial creation
 	{
 		transform = &entity->getComponent<TransformComponent>();
+		sprite = &entity->getComponent<SpriteComponent>();
+		
+		imageRect = sprite->getSrcDim();;
 	}
 	void update() override
 	{
-		// update physics sutuff
-		int width = 500;
-		int height = 500;
-		int mapH = 960;
-		int mapW = 960;
+		// This only performs bouncing for the DVD logo for now
+		
+
 		int x = transform->position.x;
 		int y = transform->position.y;
-		if ((y > mapH-height) || (y < 0))
+
+		if ((y > (windowH - imageRect.h)) || (y < 0))
 		{
 			// bounce on top and bottom
 			yvel = -yvel;
+			sprite->setRandomColor();
 		}
-		if ((x > (mapW - width))|| (x < 0))
+		if ((x > (windowW - imageRect.w))|| (x < 0))
 		{
 			// bounce on left and right
 			xvel = -xvel;
+			sprite->setRandomColor();
 		}
 			
 		// increment position based on velocity

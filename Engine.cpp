@@ -1,18 +1,19 @@
 #include "Engine.h"
 #include "TextureManager.h"
 #include "Components.h"
+#include "Vector2D.h"
 
 Manager manager;
-SDL_Renderer* Engine::renderer = nullptr;
+SDL_Renderer*	Engine::renderer = nullptr;
+SDL_Event		Engine::event;
 // entities
-auto& card(manager.addEntity());
+auto& dvdLogo(manager.addEntity());
 int counter = 0;
 
 Engine::Engine()
 {
 
 }
-
 Engine::~Engine()
 {
 
@@ -25,6 +26,7 @@ void Engine::init(const char* title, int xpos, int ypos, int width, int height, 
 		// creates a window from the xpos, ypos, width, height
 			// will go fullscreen if flag is true
 		// creates a renderer
+	
 	// else this will print out error messages and return
 	// after setting the isRunning flag to false to end the program.
 
@@ -51,14 +53,13 @@ void Engine::init(const char* title, int xpos, int ypos, int width, int height, 
 			std::cout << "Renderer Created." << std::endl;
 		}
 		isRunning = true;
+		initObjects(); // sets up all objects in the scene
 	}
 	else
 	{
-		isRunning = false;
+		// no objects are initalized because either the window or renderer failed on startup
+		isRunning = false; 
 	}
-	
-	initObjects(); // sets up all objects in the scene
-
 	return;
 }
 
@@ -67,14 +68,16 @@ void Engine::initObjects()
 	// This is where the game objects will be assembled one component at a time
 
 
-	card.addComponent<TransformComponent>(400,400);
-	card.addComponent<SpriteComponent>("assets/GPS2.png", 500, 500);
-	card.addComponent<PhysicsComponent>(5, -6, 0);
+	dvdLogo.addComponent<TransformComponent>(400,400);
+	dvdLogo.addComponent<SpriteComponent>("assets/DVDlogo.png", 237, 512);
+	dvdLogo.addComponent<PhysicsComponent>(5, -6, 0);
 
 }
 
 void Engine::handleEvents()
 {
+	// Description: This is where keyboard and mouse events are handled
+
 	// function improvement
 		// This function can be improved later by adding
 		// a state system to poll for different events that happen one after another
@@ -83,7 +86,17 @@ void Engine::handleEvents()
 
 	SDL_Event event;
 	SDL_PollEvent(&event); // SDL sets our local event to what is currently happening.
-
+	
+	// simplified keyboad controller to allow you to exit on an ESC press (for fullscreen accessability)
+	if (event.type == SDL_KEYDOWN) 
+	{
+		switch (event.key.keysym.sym)
+		{
+		case SDLK_ESCAPE:
+			isRunning = false;
+		}
+	}
+	
 	switch (event.type)
 	{
 	case SDL_QUIT: // triggers when you press the x on the top right of the window
@@ -96,13 +109,19 @@ void Engine::handleEvents()
 
 void Engine::update()
 {
-	// I just put in a load delay because it looks clunky
+	// This phase will call update on all components attached to entities.
+		// It is all done through the manager.update() function
+		// all components may have overridden init, update, and draw functions to do extra steps
+
+
+	// There needed to be a short delay so things have time to load in before movement happens
+	// This will likely be removed as I move to a graphics card or have a different type of demo
 	if (counter == 0)
 	{
 		manager.update();
 		counter++;
 	}
-	if (counter < 50)
+	if (counter < 50) // give the software 50 cycles to allow time for loading
 		counter++;
 	else
 		manager.update(); // this will update all components on every entity
@@ -117,22 +136,24 @@ void Engine::render()
 		// and lastly present the canvas to the user
 
 	SDL_RenderClear(renderer); // clear out render buffer
-	SDL_SetRenderDrawColor(renderer, 161, 161, 161, 255);
+	//SDL_SetRenderDrawColor(renderer, 161, 161, 161, 255); // This will set a background color
+
+	// This calls all of the overridden draw() functions in each component that has one
+	// It paints the images on the renderer before it is presented
 	manager.draw();
-	SDL_RenderPresent(renderer);
+	
+	SDL_RenderPresent(renderer); // flip the canvas around to display whatever resides in the renderer
 }
 
 void Engine::close()
 {
-	// function details
-		// essential SDL items are destroyed here and SDL itself is quit
-		// after that each thing that is dynamic memory needs to be dealt with
-
-	// Remove components from ECS manager
+	// essential SDL items free their memory here
 	
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
+	// as SDL quits, each component that has memory 
+	// allocated to resources call their deconstructor here to avoid memory leaks
 
 	std::cout << "Cleared memory." << std::endl;
 }
