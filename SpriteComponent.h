@@ -21,15 +21,10 @@ public:
 		destRect.w = srcrectW;
 		destRect.h = srcrectH;
 
-		/*
-		You can do the following where you initalize the srcRect width and height = the transform positions
-
-		*/
 	}
 	~SpriteComponent()
 	{
 		SDL_DestroyTexture(texture);
-		//std::cout << "texture destroyed" << std::endl;
 	}
 	void init() override // generic values for the initial creation
 	{

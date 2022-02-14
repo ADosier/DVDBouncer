@@ -21,10 +21,9 @@ public:
 	static SDL_Renderer*	renderer;
 	static SDL_Event		event;
 
-	static const int	windowW = 960;
-	static const int	windowH = 960;
-	static const bool	fullscr = false;
-
+	static const int	windowW = 1920;
+	static const int	windowH = 1080;
+	static const bool	fullscr = true;
 private:
 	void initObjects();
 
