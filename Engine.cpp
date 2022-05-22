@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include "Components.h"
 #include "Vector2D.h"
+#include "ScreenBounceLogic.h"
 
 Manager manager;
 SDL_Renderer*	Engine::renderer = nullptr;
@@ -10,6 +11,9 @@ SDL_Event		Engine::event;
 // entities
 // To create an entity that you can attach components to do the following:
 // auto& objectName(manager.addEntity());
+
+auto& dvdLogo(manager.addEntity());
+ScreenBounceLogic bounceLogic(5, -6); // controller for the bounce mechanic
 
 int counter = 0; // facilitates pause in update so things have time to load in. This avoids an immediate studder
 
@@ -87,7 +91,11 @@ void Engine::init(const char* title, int xpos, int ypos, int width, int height, 
 void Engine::initObjects()
 {
 	// This is where objects will be assembled one component at a time
-
+	dvdLogo.addComponent<TransformComponent>(400,400);
+	dvdLogo.addComponent<SpriteComponent>("assets/DVDlogo.png", 237, 512);
+	
+	// link the components for the logo to the bounce logic
+	bounceLogic.init(&dvdLogo.getComponent<TransformComponent>(), &dvdLogo.getComponent<SpriteComponent>(), windowW, windowH);
 }
 
 void Engine::handleEvents()
@@ -140,7 +148,14 @@ void Engine::update()
 	if (counter < 50) // give the software 50 cycles to allow time for loading
 		counter++;
 	else
+	{
 		manager.update(); // this will update all components on every entity
+		// doing bouncing logic here for the dvd logo
+
+		bounceLogic.update();
+
+	}
+
 }
 
 void Engine::render()
