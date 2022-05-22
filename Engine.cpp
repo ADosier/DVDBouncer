@@ -44,7 +44,7 @@ void Engine::init(const char* title, int xpos, int ypos, int width, int height, 
 			std::cout << "Window Created." << std::endl;
 		}
 
-		renderer = SDL_CreateRenderer(window, -1, 0); // (window, int index, Uint32 flags)
+		renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC); // (window, int index, Uint32 flags)
 		if (renderer)
 		{
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
