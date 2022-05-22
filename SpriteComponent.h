@@ -4,7 +4,7 @@
 #include "Components.h"
 #include "SDL.h"
 
-#include "Rando.h" //========================================================= DVD BOUNCE DEMO ONLY
+#include "Rando.h" // allows you to set a sprite to a random color
 
 class SpriteComponent : public Component
 {

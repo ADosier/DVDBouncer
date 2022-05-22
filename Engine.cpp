@@ -6,9 +6,12 @@
 Manager manager;
 SDL_Renderer*	Engine::renderer = nullptr;
 SDL_Event		Engine::event;
+
 // entities
-auto& dvdLogo(manager.addEntity());
-int counter = 0;
+// To create an entity that you can attach components to do the following:
+// auto& objectName(manager.addEntity());
+
+int counter = 0; // facilitates pause in update so things have time to load in. This avoids an immediate studder
 
 Engine::Engine()
 {
@@ -84,11 +87,6 @@ void Engine::init(const char* title, int xpos, int ypos, int width, int height, 
 void Engine::initObjects()
 {
 	// This is where objects will be assembled one component at a time
-
-
-	dvdLogo.addComponent<TransformComponent>(400,400);
-	dvdLogo.addComponent<SpriteComponent>("assets/DVDlogo.png", 237, 512);
-	dvdLogo.addComponent<PhysicsComponent>(5, -6, 0);
 
 }
 
