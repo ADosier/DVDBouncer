@@ -43,9 +43,6 @@
     <ClInclude Include="TextureManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsComponent.h">
-      <Filter>ECS</Filter>
-    </ClInclude>
     <ClInclude Include="TransformComponent.h">
       <Filter>ECS</Filter>
     </ClInclude>

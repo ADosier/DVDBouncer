@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 	engine = new Engine(); 
 	
 	// This will initalize SDL and all objects running durring the application 
-	engine->init("Graphics Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Engine::windowW, Engine::windowH, Engine::fullscr);
+	engine->init("Graphics Engine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, engine->windowW, engine->windowH, Engine::fullscr);
 
 	while (engine->running()) // any time the isRunning flag is set, the program will close
 	{

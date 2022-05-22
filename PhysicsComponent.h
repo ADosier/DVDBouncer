@@ -15,8 +15,8 @@ private:
 
 	// imageRect is dimensions of the sprite that will bounce around
 	SDL_Rect	imageRect;
-	int			windowH = Engine::windowH;
-	int			windowW = Engine::windowW;
+	int			windowH = 1080;
+	int			windowW = 1920;
 
 public:
 	PhysicsComponent(float Xvel = 0.0, float Yvel = 0.0, float g = 0.0)
