@@ -12,7 +12,9 @@ int counter = 0;
 
 Engine::Engine()
 {
-
+	// default placeholders until initalization detects the screen resolution
+	windowW = 1920;
+	windowH = 1080;
 }
 Engine::~Engine()
 {
@@ -38,6 +40,22 @@ void Engine::init(const char* title, int xpos, int ypos, int width, int height, 
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0) // if SDL initializes as intended
 	{
 		std::cout << "SDL Initalized." << std::endl;
+
+		SDL_Rect r;
+		// get native display resolution on the first monitor it finds
+		if (SDL_GetDisplayBounds(0, &r) != 0)
+		{
+			SDL_Log("SDL_GetDisplayBounds failed: %s", SDL_GetError());
+			windowW = width;
+			windowH = height;
+		}
+		else
+		{
+			// keep default resolution if the display bounds fail else set display bounds
+			windowW = width = r.w;
+			windowH = height = r.h;
+		}
+
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, fullscr);
 		if (window) // if the window is created as intended
 		{
@@ -65,7 +83,7 @@ void Engine::init(const char* title, int xpos, int ypos, int width, int height, 
 
 void Engine::initObjects()
 {
-	// This is where the game objects will be assembled one component at a time
+	// This is where objects will be assembled one component at a time
 
 
 	dvdLogo.addComponent<TransformComponent>(400,400);
